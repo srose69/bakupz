@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==============================================================================
-# VXPX Interactive Backup & Restore Script
+# Bakupz Interactive Backup & Restore Script
 # Version: 10.1 (Improved Dependencies, Non-Local Volumes, PV Progress)
 #
 # Запускается из любой директории. Архивирует/восстанавливает содержимое
@@ -20,7 +20,7 @@ set -euo pipefail
 # --- КОНФИГУРАЦИЯ СЕРВИСА ---
 DEFAULT_LANG="RU"
 NON_INTERACTIVE="N"
-MAX_LOGS=10 # Максимальное количество хранимых лог-файлов
+MAX_LOGS=10
 
 # --- ТЕХНИЧЕСКИЕ ПЕРЕМЕННЫЕ ---
 BASE_DIR="$PWD"
@@ -29,12 +29,12 @@ TEMP_BASE="/tmp/vpx_backup_tmp"
 CONFIG_ARCHIVE_NAME="configs.tar.xz"
 DOCKER_META_FILE="docker_metadata.json"
 LOG_FILE_NAME="vxpx_log_$(date +%Y-%m-%d_%H-%M-%S).txt"
-DOCKER_ERROR_LOG="$BACKUP_DIR/docker_errors.log" # Целевой лог для ошибок Docker
+DOCKER_ERROR_LOG="$BACKUP_DIR/docker_errors.log"
 
 # --- ПАРАМЕТРЫ ПРОИЗВОДИТЕЛЬНОСТИ ---
 XZ_COMPRESSION_LEVEL="-3"
 XZ_OPTS="$XZ_COMPRESSION_LEVEL -T0"
-RSYNC_OPTS="-aHAX --delete" # --delete для точного соответствия источника и приемника
+RSYNC_OPTS="-aHAX --delete"
 
 # --- ДОПОЛНИТЕЛЬНЫЕ СИСТЕМНЫЕ КОНФИГИ (расширяемый список) ---
 CUSTOM_CONFIG_PATHS=(
@@ -298,7 +298,6 @@ backup_system() {
     local DRY_RUN_MODE="N"
 
     if [ "$NON_INTERACTIVE" == "N" ]; then
-        # --- Интерактивный выбор проектов ---
         local AVAILABLE_PROJECTS=()
         while IFS= read -r dir; do
             local project_name
@@ -1035,7 +1034,7 @@ fi
 # Инициализация рабочей директории
 mkdir -p "$BACKUP_DIR"
 mkdir -p "$TEMP_BASE"
-touch "$DOCKER_ERROR_LOG" # Создаем лог ошибок Docker
+touch "$DOCKER_ERROR_LOG"
 
 lang_set
 
@@ -1069,4 +1068,5 @@ fi
 
 while true; do
     main_menu
+
 done
