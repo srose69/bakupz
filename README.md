@@ -1,5 +1,6 @@
 # Bakupz Interactive Backup & Restore Script
 
+!!! USE AT YOUR OWN  RISK !!!
 This is the repository for the **Bakupz Interactive Backup & Restore Script**, a robust Bash solution designed for backing up and restoring the contents of a working directory, specifically tailored for environments using Docker and Python virtual environments (venv).
 
 -----
