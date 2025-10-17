@@ -210,4 +210,4 @@ The script relies on a number of common Linux utilities. The `check_dependencies
 
 ## License
 
-This project is licensed under the MIT License - see the `LICENSE` file for details (Note: A separate LICENSE file is required for full compliance).
+This project is licensed under the GNU GPLv3 License - see the `LICENSE` file for details (Note: A separate LICENSE file is required for full compliance).
