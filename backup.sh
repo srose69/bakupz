@@ -28,7 +28,7 @@ BACKUP_DIR="$BASE_DIR/backups"
 TEMP_BASE="/tmp/vpx_backup_tmp"
 CONFIG_ARCHIVE_NAME="configs.tar.xz"
 DOCKER_META_FILE="docker_metadata.json"
-LOG_FILE_NAME="vxpx_log_$(date +%Y-%m-%d_%H-%M-%S).txt"
+LOG_FILE_NAME="bakupz_log_$(date +%Y-%m-%d_%H-%M-%S).txt"
 DOCKER_ERROR_LOG="$BACKUP_DIR/docker_errors.log"
 
 # --- ПАРАМЕТРЫ ПРОИЗВОДИТЕЛЬНОСТИ ---
@@ -43,9 +43,9 @@ CUSTOM_CONFIG_PATHS=(
 )
 
 # --- СИГНАТУРА ---
-SIGNATURE_SUFFIX='vxpx-bkp'
+SIGNATURE_SUFFIX='bakupz-bkp'
 ARCHIVE_EXTENSION=".srvbak"
-ARCHIVE_PREFIX="vxpx_full_backup"
+ARCHIVE_PREFIX="bakupz_full_backup"
 HASH_ALGO="sha256sum"
 
 # Длина сигнатуры: 2 (Magic) + 8 (Hash Prefix) + 9 (Suffix length) = 19
@@ -63,7 +63,7 @@ declare -A MSGS
 lang_set() {
     local lang="${1:-$DEFAULT_LANG}"
     if [ "$lang" == "EN" ]; then
-        MSGS[TITLE]='VXPX Interactive Backup Manager'
+        MSGS[TITLE]='bakupz Interactive Backup Manager'
         MSGS[CWD]='Working Directory'
         MSGS[COMPRESSION_LEVEL]='XZ Compression Level'
         MSGS[MENU_1]='Create Backup'
@@ -86,7 +86,7 @@ lang_set() {
         MSGS[RESTORE_OVERWRITE_WARNING]='This action will overwrite existing files and configurations!'
         MSGS[RESTORE_SELECT_ARCHIVE]='1. Select and Verify Archive...'
         MSGS[RESTORE_ARCHIVE_NOT_FOUND]='Error: Archive file not found at '"'$archive_path'"
-        MSGS[RESTORE_ARCHIVE_INVALID]='Error: File is not a valid VXPX backup.'
+        MSGS[RESTORE_ARCHIVE_INVALID]='Error: File is not a valid bakupz backup.'
         MSGS[RESTORE_CONTENT_HASH_FAIL]='Error: Archive content hash mismatch. Extraction aborted.'
         MSGS[RESTORE_FINAL_SUCCESS]='--- Restoration Complete! ---'
         MSGS[RESTORE_VENV_PROMPT]='Restore Python Venv? (May be slow/require internet) [y/N]:'
@@ -111,7 +111,7 @@ lang_set() {
         MSGS[DEPS_INSTALL_FAIL]='Failed to install missing dependencies. Install manually:'
         MSGS[NON_LOCAL_VOLUME_WARN]='Warning: Non-local volume detected. Backup may be incomplete or require custom handling.'
     else
-        MSGS[TITLE]='VXPX Интерактивный Backup-менеджер'
+        MSGS[TITLE]='bakupz Интерактивный Backup-менеджер'
         MSGS[CWD]='Рабочая директория'
         MSGS[COMPRESSION_LEVEL]='Уровень сжатия XZ'
         MSGS[MENU_1]='Создать резервную копию системы'
@@ -134,7 +134,7 @@ lang_set() {
         MSGS[RESTORE_OVERWRITE_WARNING]='Это действие перезапишет существующие файлы и конфигурации!'
         MSGS[RESTORE_SELECT_ARCHIVE]='1. Выбор и Проверка Архива...'
         MSGS[RESTORE_ARCHIVE_NOT_FOUND]='Ошибка: Файл архива не найден по пути '"'$archive_path'"
-        MSGS[RESTORE_ARCHIVE_INVALID]='Ошибка: Файл не является валидным VXPX бэкапом.'
+        MSGS[RESTORE_ARCHIVE_INVALID]='Ошибка: Файл не является валидным bakupz бэкапом.'
         MSGS[RESTORE_CONTENT_HASH_FAIL]='Ошибка: Хеш содержимого архива не соответствует ожидаемому. Распаковка отменена.'
         MSGS[RESTORE_FINAL_SUCCESS]='--- Восстановление успешно завершено! ---'
         MSGS[RESTORE_VENV_PROMPT]='Восстановить Python Venv? (Может быть долго/требует интернет) [y/N]:'
@@ -202,11 +202,11 @@ extract_signature() {
 
 log_rotate() {
     local log_count
-    log_count=$(find "$BACKUP_DIR" -maxdepth 1 -name "vxpx_log_*.txt" | wc -l)
+    log_count=$(find "$BACKUP_DIR" -maxdepth 1 -name "bakupz_log_*.txt" | wc -l)
     
     if [ "$log_count" -gt "$MAX_LOGS" ]; then
         echo " > Выполняется ротация логов: найдено $log_count, лимит $MAX_LOGS."
-        find "$BACKUP_DIR" -maxdepth 1 -name "vxpx_log_*.txt" -printf '%T@\t%p\n' | sort -n | head -n $((log_count - MAX_LOGS)) | cut -f 2- | xargs rm -f
+        find "$BACKUP_DIR" -maxdepth 1 -name "bakupz_log_*.txt" -printf '%T@\t%p\n' | sort -n | head -n $((log_count - MAX_LOGS)) | cut -f 2- | xargs rm -f
         echo " > Старые логи удалены."
     fi
 }
@@ -953,7 +953,7 @@ view_logs() {
     fi
 
     local LOG_FILES_PATHS
-    LOG_FILES_PATHS=$(find "$BACKUP_DIR" -maxdepth 1 -name "vxpx_log_*.txt" -exec ls -t {} + 2>/dev/null)
+    LOG_FILES_PATHS=$(find "$BACKUP_DIR" -maxdepth 1 -name "bakupz_log_*.txt" -exec ls -t {} + 2>/dev/null)
 
     if [ -z "$LOG_FILES_PATHS" ]; then
         echo -e "${YELLOW}${MSGS[LOG_NOT_FOUND]}${NC}"
@@ -1070,3 +1070,4 @@ while true; do
     main_menu
 
 done
+
